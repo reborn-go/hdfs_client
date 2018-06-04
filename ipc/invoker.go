@@ -2,7 +2,7 @@ package ipc
 
 import (
 	"github.com/golang/protobuf/proto"
-	. "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	. "github.com/reborn-go/hdfs_client/protocol/hadoop_common"
 	"go.uber.org/atomic"
 )
 
@@ -42,11 +42,12 @@ func (i *Invoker) constructRpcRequestHeader(methodName string) *RequestHeaderPro
 	}
 }
 
-func (i *Invoker) Invoke(methodName string, theRequest proto.Message, rsqI interface{}) {
+func (i *Invoker) Invoke(methodName string, theRequest proto.Message, rsqI interface{}) (err error) {
 	theResponse := rsqI.(proto.Message)
+	rsq := &theResponse
 	rpcRequestHeader := i.constructRpcRequestHeader(methodName)
 	rpcKind := RpcKindProto_RPC_PROTOCOL_BUFFER.Enum()
-	i.client.call(*rpcKind,
-		RpcRequestWrapper{rpcRequestHeader, theRequest},&theResponse, i.remoteId, i.fallbackToSimpleAuth)
-
+	err = i.client.call(*rpcKind,
+		RpcRequestWrapper{rpcRequestHeader, theRequest}, rsq, i.remoteId, i.fallbackToSimpleAuth)
+	return
 }

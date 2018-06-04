@@ -5,7 +5,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"sync"
 	"net"
-	. "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	. "github.com/reborn-go/hdfs_client/protocol/hadoop_common"
 	"os/user"
 	"go.uber.org/atomic"
 	"fmt"
@@ -44,7 +44,7 @@ func newClient() *Client {
 }
 
 func (c *Client) call(rpcKind RpcKindProto, rpcRequest RpcRequestWrapper, theResponse *proto.Message,
-	remoteId ConnectionId, fallbackToSimpleAuth atomic.Bool) (rsq proto.Message, err error) {
+	remoteId ConnectionId, fallbackToSimpleAuth atomic.Bool) (err error) {
 	call := createCall(rpcKind, rpcRequest, theResponse)
 	connection, err := c.getConnection(remoteId, call, 0, fallbackToSimpleAuth)
 	if err != nil {
@@ -53,6 +53,7 @@ func (c *Client) call(rpcKind RpcKindProto, rpcRequest RpcRequestWrapper, theRes
 		connection.addCall(*call)
 	}
 	<-call.rspChan
+	fmt.Println(*theResponse)
 	return
 	//todo
 }

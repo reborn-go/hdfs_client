@@ -9,7 +9,7 @@ import (
 	"io"
 	"time"
 
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	hdfs "github.com/reborn-go/hdfs_client/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
 )
 
