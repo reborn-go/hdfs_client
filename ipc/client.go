@@ -399,7 +399,19 @@ func newConnectionId(address string, rpcTimeout int32) ConnectionId {
 		maxRetriesOnSocketTimeouts: 45,
 		tcpNoDelay:                 true,
 		doPing:                     true,
-		pingInterval:               2,
+		pingInterval:               45,
+	}
+}
+
+func newConnectionIdWithIdleTime(address string, rpcTimeout int32, idleTime int64) ConnectionId {
+	return ConnectionId{
+		address:                    address,
+		rpcTimeout:                 rpcTimeout,
+		maxIdleTime:                idleTime,
+		maxRetriesOnSocketTimeouts: 45,
+		tcpNoDelay:                 true,
+		doPing:                     true,
+		pingInterval:               45,
 	}
 }
 

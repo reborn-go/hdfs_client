@@ -4,6 +4,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	. "github.com/reborn-go/hdfs_client/protocol/hadoop_common"
 	"go.uber.org/atomic"
+	"sync"
 )
 
 const (
@@ -12,7 +13,9 @@ const (
 )
 
 var (
-	client = newClient()
+	invoker *Invoker
+	client  = newClient()
+	mux     sync.Mutex
 )
 
 type Invoker struct {
@@ -25,12 +28,31 @@ type Invoker struct {
 	fallbackToSimpleAuth  atomic.Bool
 }
 
+//todo let me think
+func CreateOrGetInvoker() *Invoker {
+	mux.Lock()
+	defer mux.Unlock()
+	if invoker == nil {
+
+	}
+	return nil
+}
+
 func NewInvoker(address string, rpcTimeout int32) *Invoker {
 	return &Invoker{
 		protocolName:          protocolClass,
 		clientProtocolVersion: protocolClassVersion,
 		client:                client,
 		remoteId:              newConnectionId(address, rpcTimeout),
+	}
+}
+
+func NewInvokerDataNode(address string, rpcTimeout int32, idleTime int64) *Invoker {
+	return &Invoker{
+		protocolName:          protocolClass,
+		clientProtocolVersion: protocolClassVersion,
+		client:                client,
+		remoteId:              newConnectionIdWithIdleTime(address, rpcTimeout, idleTime),
 	}
 }
 

@@ -16,7 +16,7 @@ import (
 const (
 	dataTransferVersion = 0x1c
 	writeBlockOp        = 0x50
-	readBlockOp         = 0x51
+	ReadBlockOp         = 0x51
 	checksumBlockOp     = 0x55
 )
 
@@ -113,7 +113,7 @@ func readPrefixedMessage(r io.Reader, msg proto.Message) error {
 // +-----------------------------------------------------------+
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
-func writeBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
+func WriteBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
 	header := []byte{0x00, dataTransferVersion, op}
 	msgBytes, err := makePrefixedMessage(msg)
 	if err != nil {
@@ -133,7 +133,7 @@ func writeBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
 // +-----------------------------------------------------------+
 // |  varint length + BlockOpResponseProto                     |
 // +-----------------------------------------------------------+
-func readBlockOpResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
+func ReadBlockOpResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
 	resp := &hdfs.BlockOpResponseProto{}
 	err := readPrefixedMessage(r, resp)
 
